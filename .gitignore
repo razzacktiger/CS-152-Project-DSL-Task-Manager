@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+
 
 # C extensions
 *.so
@@ -127,6 +129,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.taskenv
+taskenv/
 
 # Spyder project settings
 .spyderproject
@@ -158,3 +162,21 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+# IDE and editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ANTLR generated files
+*Lexer.py
+*Parser.py
+*Listener.py
+*Visitor.py
+*interp
+*tokens
+
+# OS generated files
+.DS_Store     # For macOS
+Thumbs.db     # For Windows
