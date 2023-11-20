@@ -79,7 +79,7 @@ def main():
         # If the command is a query command
         elif commandContext.queryCommand():
             # Get the status filter from the command
-            status_filter = commandContext.queryCommand().getText().split()[1] if len(commandContext.queryCommand().getText().split()) > 1 else None
+            status_filter = commandContext.queryCommand().getText().split()[1] if len(commandContext.queryCommand().getText().split()) > 1 else 'ALL'
             # Show the tasks in the interpreter
             interpreter.show_tasks(status_filter)
 
