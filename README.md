@@ -6,22 +6,27 @@ Here are the detailed instructions to set up the ANTLR and python project on the
 
 1. Clone the GitHub Repository
 Open your terminal or command prompt and navigate to the directory where you want to clone the repository. Run the following command:
+
 `git clone https://github.com/razzacktiger/CS-152-Project-DSL-Task-Manager.git`
 
 3. Navigate to the Project Directory
 After cloning the repository, navigate to the project directory:
+
 `cd CS-152-Project-DSL-Task-Manager`
 
 5. Set Up a Virtual Environment
 Create a new virtual environment in the project directory for handling python versions:
+
 `python3 -m venv venv`
 This command creates a new virtual environment named venv.
 
-6. Activate the Virtual Environment
+7. Activate the Virtual Environment
 Activate the virtual environment by running the appropriate command based on your operating system:
 - For macOS and Linux:
+
 `source venv/bin/activate`
 - For Windows:
+
 `venv\Scripts\activate`
 
 5. Install the ANTLR4 Python Runtime
