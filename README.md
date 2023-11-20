@@ -11,8 +11,10 @@ Open your terminal or command prompt and navigate to the directory where you wan
 
 3. Navigate to the Project Directory
 After cloning the repository, navigate to the project directory:
-
 `cd CS-152-Project-DSL-Task-Manager`
+
+Under the repo folder navigate to the Task Manager Folder:
+`cd TaskManager`
 
 5. Set Up a Virtual Environment
 Create a new virtual environment in the project directory for handling python versions:
