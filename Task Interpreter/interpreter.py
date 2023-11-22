@@ -1,6 +1,6 @@
 from TaskGrammarLexer import TaskGrammarLexer
 from TaskGrammarParser import TaskGrammarParser
-from antlr4 import FileStream, CommonTokenStream
+from antlr4 import InputStream, FileStream, CommonTokenStream
 from datetime import datetime
 
 
@@ -21,8 +21,12 @@ class TaskInterpreter:
         
         # Method to mark a task
     def mark_task(self, task_id, status):
-        # Change the status of a task
-        self.tasks[task_id]['status'] = status
+        try:
+            self.tasks[task_id]['status'] = status
+            # print(self.tasks[task_id])
+        except IndexError:
+            print(f"Task with ID {task_id} does not exist to mark.")
+
         
         # Method to show tasks
     def show_tasks(self, status_filter):
@@ -31,7 +35,7 @@ class TaskInterpreter:
             # If the task status matches the filter or the filter is 'ALL'
             if task['status'] == status_filter or status_filter == 'ALL':
                 # Print the task description, due date, and status
-                print(f"{task['description']} (Due: {task['due_date']}, Status: {task['status']})")
+                print(f"Task ID: {self.tasks.index(task)} {task['description']} (Due: {task['due_date']}, Status: {task['status']})")
     def delete_tasks(self, task_id):
          # Check if the task_id is within the valid range of indices
         if 0 <= task_id < len(self.tasks):
@@ -53,13 +57,23 @@ class TaskInterpreter:
         
 
 def main():
-    while True:
-        inputvalue = str(input("Choose the input file to run:"))
-        while inputvalue[-4:] != ".txt":
-            print("Invalid file type. Please choose a .txt file.")
-            inputvalue = str(input("Choose the input file to run:"))
-        # Create an input stream from the file "input.txt"
-        input_stream = FileStream(inputvalue)
+    # Create a new task interpreter
+    interpreter = TaskInterpreter()
+    # create a function to proces pure command input
+    
+    def process_file_input(input_value, interpreter):
+        # Create an input stream from the input value
+        input_stream = FileStream(input_value)
+        # Process the input stream
+        process_input_stream(input_stream, interpreter)
+
+    def process_command_input(input_value, interpreter):
+        # Create an input stream from the input value
+        input_stream = InputStream(input_value)
+        # Process the input stream
+        process_input_stream(input_stream, interpreter)
+
+    def process_input_stream(input_stream, interpreter):
         # Create a lexer with the input stream
         lexer = TaskGrammarLexer(input_stream)
         # Create a token stream from the lexer
@@ -68,10 +82,11 @@ def main():
         parser = TaskGrammarParser(token_stream)
         # Parse the input and create a tree
         tree = parser.prog()
-        
-        # Create a new task interpreter
-        interpreter = TaskInterpreter()
-        
+        # Process the tree commands
+        process_tree_commands(tree, interpreter)
+    
+    # Method to process command input
+    def process_tree_commands(tree, interpreter):
         # Loop through each command in the tree
         for commandContext in tree.command():
             # If the command is an add command
@@ -115,7 +130,16 @@ def main():
                 # Get the status from the command
                 status = commandContext.updateCommand().status().getText()  
                 interpreter.update_tasks(task_id, description, due_date, status)
-
+    while True:
+        input_value = str(input("type in a command or Choose the input file to run, type exit to quit: "))
+        # check if inputvalue is a command or a txt file 
+        if input_value.strip().endswith(".txt"):
+            # Code to handle txt file
+            process_file_input(input_value, interpreter)
+        if input_value == "exit":
+            quit()
+        elif input_value.strip().endswith(".txt") != True:
+            process_command_input(input_value, interpreter)
 
 if __name__ == '__main__':
     # Call the main function

@@ -2,4 +2,7 @@ ADD TASK "Buy groceries" DUE 11/05/2023
 ADD TASK "Finish project" DUE 11/10/2023
 ADD TASK "Create error handling statements" DUE 11/23/2023 11:30:00
 MARK TASK 1 AS COMPLETED
+DELETE TASK 0
+SHOW ALL TASKS
+UPDATE TASK 1 "Create error handling conditions" DUE 11/24/2023 11:45:00 MARK AS OPEN
 SHOW ALL TASKS
