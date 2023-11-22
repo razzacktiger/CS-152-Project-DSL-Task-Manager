@@ -33,13 +33,22 @@ class TaskInterpreter:
                 # Print the task description, due date, and status
                 print(f"{task['description']} (Due: {task['due_date']}, Status: {task['status']})")
     def delete_tasks(self, task_id):
-        # Delete the task at the specified task_id
-        del self.tasks[task_id]
+         # Check if the task_id is within the valid range of indices
+        if 0 <= task_id < len(self.tasks):
+            # Delete the task at the specified task_id
+            del self.tasks[task_id]
+        else:
+            print(f"Task with ID {task_id} does not exist.")
+
     def update_tasks(self, task_id, description, due_date, status):
-        # Update the task at the specified task_id
-        self.tasks[task_id]['description'] = description
-        self.tasks[task_id]['due_date'] = due_date
-        self.tasks[task_id]['status'] = status
+        # Check if the task_id is within the valid range of indices
+        if 0 <= task_id < len(self.tasks):
+            # Update the task at the specified task_id
+            self.tasks[task_id]['description'] = description
+            self.tasks[task_id]['due_date'] = due_date
+            self.tasks[task_id]['status'] = status
+        else:
+            print(f"Task with ID {task_id} does not exist.")
         
         
 
@@ -72,10 +81,8 @@ def main():
                 # Check for DATETIME and DATE formats
                 if commandContext.addCommand().DATETIME():
                     due_date = commandContext.addCommand().DATETIME().getText()
-                    print(due_date)
                 elif commandContext.addCommand().DATE():
                     due_date = commandContext.addCommand().DATE().getText()
-                    print(due_date)
                 # Add the task to the interpreter
                 interpreter.add_task(description, due_date)
             # If the command is a mark command
@@ -100,6 +107,15 @@ def main():
                 # Get the task id, description, due date, and status from the command
                 task_id = int(commandContext.updateCommand().ID().getText())
                 description = commandContext.updateCommand().STRING().getText()[1:-1]
+                # Check for DATETIME and DATE formats
+                if commandContext.updateCommand().DATETIME():
+                    due_date = commandContext.updateCommand().DATETIME().getText()
+                elif commandContext.updateCommand().DATE():
+                    due_date = commandContext.updateCommand().DATE().getText()
+                # Get the status from the command
+                status = commandContext.updateCommand().status().getText()  
+                interpreter.update_tasks(task_id, description, due_date, status)
+
 
 if __name__ == '__main__':
     # Call the main function

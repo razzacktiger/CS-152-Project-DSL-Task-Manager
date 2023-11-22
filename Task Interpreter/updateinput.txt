@@ -1,3 +1,3 @@
 DELETE TASK 1 
-UPDATE TASK 2 "Create error handling conditions" DUE 11/24/2023 11:45:00
+UPDATE TASK 2 "Create error handling conditions" DUE 11/24/2023 11:45:00 MARK AS OPEN
 SHOW ALL TASKS
