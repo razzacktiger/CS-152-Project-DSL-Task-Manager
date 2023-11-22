@@ -8,7 +8,7 @@ command: addCommand
        | queryCommand 
        ;
 
-addCommand: 'ADD' 'TASK' STRING 'DUE' DATE;
+addCommand: 'ADD' 'TASK' STRING 'DUE' (DATE | DATETIME);
 
 markCommand: 'MARK' 'TASK' ID 'AS' status;
 
@@ -21,7 +21,11 @@ ID: [0-9]+;
 
 STRING: '"' [a-zA-Z0-9 ]+ '"';
 
-DATE: [0-9]+ '/' [0-9]+ '/' [0-9]+;
+DATE: [0-9]+ '/' [0-9]+ '/' [0-9]+; // Matches MM/DD/YYYY;
+
+DATETIME: DATE WS TIME;
+
+TIME: [0-9]+ ':' [0-9]+ ':' [0-9]+;
 
 WS: [ \t\n\r]+ -> skip;
 

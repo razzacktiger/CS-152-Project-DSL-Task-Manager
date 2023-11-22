@@ -1,6 +1,8 @@
 from TaskGrammarLexer import TaskGrammarLexer
 from TaskGrammarParser import TaskGrammarParser
 from antlr4 import FileStream, CommonTokenStream
+from datetime import datetime
+
 
 class TaskInterpreter:
     def __init__(self):
@@ -11,7 +13,11 @@ class TaskInterpreter:
         # Method to add a task
     def add_task(self, description, due_date):
         # Append a new task to the task list
-        self.tasks.append({'description': description, 'due_date': due_date, 'status': 'OPEN'})
+        if ':' in due_date:  # Check if time component is present
+            due = datetime.strptime(due_date, '%m/%d/%Y %H:%M:%S')  # Parse datetime with time
+        else:
+            due = datetime.strptime(due_date, '%m/%d/%Y')  # Parse datetime without time
+        self.tasks.append({'description': description, 'due_date': due, 'status': 'OPEN'})
         
         # Method to mark a task
     def mark_task(self, task_id, status):
@@ -66,7 +72,13 @@ def main():
         if commandContext.addCommand():
             # Get the description and due date from the command
             description = commandContext.addCommand().STRING().getText()[1:-1]  # Remove quotes
-            due_date = commandContext.addCommand().DATE().getText()
+            # Check for DATETIME and DATE formats
+            if commandContext.addCommand().DATETIME():
+                due_date = commandContext.addCommand().DATETIME().getText()
+                print(due_date)
+            elif commandContext.addCommand().DATE():
+                due_date = commandContext.addCommand().DATE().getText()
+                print(due_date)
             # Add the task to the interpreter
             interpreter.add_task(description, due_date)
         # If the command is a mark command
