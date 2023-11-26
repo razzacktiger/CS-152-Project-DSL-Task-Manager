@@ -42,8 +42,20 @@ g4
 `antlr4 -Dlanguage=Python3 TaskGrammar.g4 `
 
 7. Run the Interpreter
-Now you can run the interpreter.py file:
-`python interpreter.py`
+Now you can run the main.py file:
+`python main.py`
+
+8. Enter a file name (in the current working directory) or enter a DSL command.
+ex. input file
+`type in a command or Choose the input file to run, type exit to quit: input.txt`
+output:
+`Task ID: 0 Finish project (Due: 2023-11-10 00:00:00, Status: COMPLETED)
+Task ID: 1 Create error handling conditions (Due: 11/24/2023 11:45:00, Status: OPEN)`
+ex.2 direct commands
+`type in a command or Choose the input file to run, type exit to quit: SHOW ALL TASKS`
+OUTPUT: 
+`Task ID: 0 Finish project (Due: 2023-11-10 00:00:00, Status: COMPLETED)
+Task ID: 1 Create error handling conditions (Due: 11/24/2023 11:45:00, Status: OPEN)`
 
 
 
