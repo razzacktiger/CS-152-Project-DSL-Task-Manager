@@ -6,12 +6,34 @@ from datetime import datetime
 import os 
 from interpreter import TaskInterpreter
 from antlr4.error.ErrorListener import ErrorListener
+from antlr4 import Token
 
 class CustomErrorListener(ErrorListener):
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
-        # Customize your error message here
-        print(f"Syntax error at line {line}, column {column}: {msg}")
+        if offendingSymbol is not None:
+            start_column = offendingSymbol.column
+            end_column = start_column + len(offendingSymbol.text) - 1
+            if offendingSymbol.text:
+                unrecognized_text = ''
+                for i in range(start_column, end_column + 1):
+                    unrecognized_text += offendingSymbol.text[i - start_column]
+                print(f"Syntax error at line {line}, column {start_column}-{end_column}: token recognition error at: '{unrecognized_text}'")
+            else:
+                print(f"Syntax error at line {line}, column {start_column}-{end_column}: {msg}")
+        else:
+            print(f"Syntax error at line {line}, column {column}: {msg}")
 
+    def listUnrecognizedTokens(self, recognizer):
+        nextSymbol = recognizer.getInputStream().LT(1)
+        unrecognized_tokens = []
+        while nextSymbol is not None and nextSymbol.type != Token.EOF and nextSymbol.text != '\n':
+            if nextSymbol.type == Token.EOF or nextSymbol.text == '\n':
+                break
+            unrecognized_tokens.append(nextSymbol.text)
+            nextSymbol = recognizer.getInputStream().consume()
+        if unrecognized_tokens:
+            print(f"Unrecognized tokens: {', '.join(unrecognized_tokens)}")
+        
 def main():
     # Create a new task interpreter
     interpreter = TaskInterpreter()
@@ -24,7 +46,7 @@ def main():
             input_value (_type_): _description_
             interpreter (_type_): _description_
         """
-        print(f"Current working directory: {os.getcwd()}")
+        # print(f"Current working directory: {os.getcwd()}")
         if os.path.exists(input_value):
             # Create an input stream from the input file
             input_stream = FileStream(input_value)
@@ -106,14 +128,14 @@ def main():
                 status = commandContext.updateCommand().status().getText()  
                 interpreter.update_tasks(task_id, description, due_date, status)
     while True:
-        input_value = str(input("type in a command or Choose the input file to run, type exit to quit: "))
+        input_value = str(input("type in a command or Choose the input file to run, type exit to quit: ")).strip()
         # check if inputvalue is a command or a txt file 
-        if input_value.strip().endswith(".txt"):
+        if input_value.endswith(".txt"):
             # Code to handle txt file
             process_file_input(input_value, interpreter)
         if input_value.strip() == "exit": 
             quit()
-        elif input_value.strip().endswith(".txt") != True:
+        elif input_value.endswith(".txt") != True:
             # check if input value is a valid DSL command and include error handling 
             process_command_input(input_value, interpreter)
             

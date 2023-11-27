@@ -1,0 +1,2 @@
+ADD TASK Complete report DUE 12/12/2023  // Missing quotes
+SHOW ALL TASK  // Missing 'S' in TASKS
