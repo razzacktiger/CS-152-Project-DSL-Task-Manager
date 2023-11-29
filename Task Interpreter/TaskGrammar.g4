@@ -20,7 +20,7 @@ deleteCommand: 'DELETE' 'TASK' ID ;
 
 updateCommand: 'UPDATE' 'TASK' ID STRING 'DUE' (DATE | DATETIME) 'MARK' 'AS' status; 
 
-status: 'OPEN' | 'COMPLETED';
+status: 'OPEN' | 'COMPLETED' | 'IN_PROGRESS';
 
 // Lexer Rules
 ID: [0-9]+;

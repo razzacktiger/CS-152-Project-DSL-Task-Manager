@@ -55,11 +55,16 @@ class TaskInterpreter:
         :param status: The status to mark the task with
         :return: None
         """
+        ValidStatus = ['OPEN', 'COMPLETED', 'IN_PROGRESS']
+        if status not in ValidStatus:
+            print(f"Error: Invalid status Please provide a valid status. Valid statuses are: {ValidStatus}")
+            return
         try:
             self.tasks[task_id]['status'] = status
             print(f"Task with ID {task_id} has been marked as {status}.")
         except IndexError:
             print(f"Task with ID {task_id} does not exist to mark.")
+        
 
         
         # Method to show tasks
@@ -98,18 +103,25 @@ class TaskInterpreter:
         :param status: The new status of the task
         :return: None
         """
-        # Check if the task_id is within the valid range of indices
-        if 0 <= task_id < len(self.tasks):
-            # Update the task at the specified task_id
+        valid_statuses = ['OPEN', 'IN_PROGRESS', 'COMPLETED']  # Define valid statuses
+        if status in valid_statuses:
             try:
-                self.tasks[task_id]['description'] = description
-                self.tasks[task_id]['due_date'] = due_date
-                self.tasks[task_id]['status'] = status
-                print(f"Task with ID {task_id} has been updated with description '{description}', due date {due_date}, and status {status}.")
+                if task_id < len(self.tasks) and task_id >= 0:  # Check if the task_id is within the valid range of indices
+                    # Check for DATETIME and DATE formats
+                    if ':' in due_date:  # Check if time component is present
+                        due = datetime.strptime(due_date, '%m/%d/%Y %H:%M:%S')  # Parse datetime with time
+                    else:
+                        due = datetime.strptime(due_date, '%m/%d/%Y')  # Parse datetime without time
+                    self.tasks[task_id]['description'] = description
+                    self.tasks[task_id]['due_date'] = due
+                    self.tasks[task_id]['status'] = status
+                    print(f"Task with ID {task_id} has been updated with description '{description}', due date {due_date}, and status {status}.")
+                else:
+                    print(f"Error: Task with ID {task_id} does not exist.")
             except ValueError as e:
-                self.check_date(due_date, e)
+                print(f"Error: Failed to parse due date '{due_date}'. Please provide the due date in the format 'MM/DD/YYYY' or 'MM/DD/YYYY HH:MM:SS'.")
         else:
-            print(f"Task with ID {task_id} does not exist.")
+            print(f"Error: Invalid status '{status}'. Please specify a valid status from the following: {valid_statuses}")
         
         
 

@@ -84,49 +84,54 @@ def main():
     
     # Method to process command input
     def process_tree_commands(tree, interpreter):
-        # Loop through each command in the tree
-        for commandContext in tree.command():
-            # If the command is an add command
-            if commandContext.addCommand():
-                # Get the description and due date from the command
-                description = commandContext.addCommand().STRING().getText()[1:-1]  # Remove quotes
-                # Check for DATETIME and DATE formats
-                if commandContext.addCommand().DATETIME():
-                    due_date = commandContext.addCommand().DATETIME().getText()
-                elif commandContext.addCommand().DATE():
-                    due_date = commandContext.addCommand().DATE().getText()
-                # Add the task to the interpreter
-                interpreter.add_task(description, due_date)
-            # If the command is a mark command
-            elif commandContext.markCommand():
-                # Get the task id and status from the command
-                task_id = int(commandContext.markCommand().ID().getText())
-                status = commandContext.markCommand().status().getText()
-                # Mark the task in the interpreter
-                interpreter.mark_task(task_id, status)
-            # If the command is a query command
-            elif commandContext.queryCommand():
-                # Get the status filter from the command
-                status_filter = commandContext.queryCommand().getText().split()[1] if len(commandContext.queryCommand().getText().split()) > 1 else 'ALL'
-                # Show the tasks in the interpreter
-                interpreter.show_tasks(status_filter)
-            elif commandContext.deleteCommand():
-                # Get the task id from the command
-                task_id = int(commandContext.deleteCommand().ID().getText())
-                # Delete the task in the interpreter
-                interpreter.delete_tasks(task_id)
-            elif commandContext.updateCommand():
-                # Get the task id, description, due date, and status from the command
-                task_id = int(commandContext.updateCommand().ID().getText())
-                description = commandContext.updateCommand().STRING().getText()[1:-1]
-                # Check for DATETIME and DATE formats
-                if commandContext.updateCommand().DATETIME():
-                    due_date = commandContext.updateCommand().DATETIME().getText()
-                elif commandContext.updateCommand().DATE():
-                    due_date = commandContext.updateCommand().DATE().getText()
-                # Get the status from the command
-                status = commandContext.updateCommand().status().getText()  
-                interpreter.update_tasks(task_id, description, due_date, status)
+        try:
+            # Loop through each command in the tree
+            for commandContext in tree.command():
+                # If the command is an add command
+                if commandContext.addCommand():
+                    # Get the description and due date from the command
+                    description = commandContext.addCommand().STRING().getText()[1:-1]  # Remove quotes
+                    # Check for DATETIME and DATE formats
+                    if commandContext.addCommand().DATETIME():
+                        due_date = commandContext.addCommand().DATETIME().getText()
+                    elif commandContext.addCommand().DATE():
+                        due_date = commandContext.addCommand().DATE().getText()
+                    # Add the task to the interpreter
+                    interpreter.add_task(description, due_date)
+                # If the command is a mark command
+                elif commandContext.markCommand():
+                    # Get the task id and status from the command
+                    task_id = int(commandContext.markCommand().ID().getText())
+                    status = commandContext.markCommand().status().getText()
+                    # Mark the task in the interpreter
+                    interpreter.mark_task(task_id, status)
+                # If the command is a query command
+                elif commandContext.queryCommand():
+                    # Get the status filter from the command
+                    status_filter = commandContext.queryCommand().getText().split()[1] if len(commandContext.queryCommand().getText().split()) > 1 else 'ALL'
+                    # Show the tasks in the interpreter
+                    interpreter.show_tasks(status_filter)
+                elif commandContext.deleteCommand():
+                    # Get the task id from the command
+                    task_id = int(commandContext.deleteCommand().ID().getText())
+                    # Delete the task in the interpreter
+                    interpreter.delete_tasks(task_id)
+                elif commandContext.updateCommand():
+                    # Get the task id, description, due date, and status from the command
+                    task_id = int(commandContext.updateCommand().ID().getText())
+                    description = commandContext.updateCommand().STRING().getText()[1:-1]
+                    # Check for DATETIME and DATE formats
+                    if commandContext.updateCommand().DATETIME():
+                        due_date = commandContext.updateCommand().DATETIME().getText()
+                    elif commandContext.updateCommand().DATE():
+                        due_date = commandContext.updateCommand().DATE().getText()
+                    # Get the status from the command
+                    status = commandContext.updateCommand().status().getText()  
+                    interpreter.update_tasks(task_id, description, due_date, status)
+        except AttributeError as e:
+            print(f"Attribute error occurred: {e}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
     while True:
         input_value = str(input("type in a command or Choose the input file to run, type exit to quit: ")).strip()
         # check if inputvalue is a command or a txt file 
